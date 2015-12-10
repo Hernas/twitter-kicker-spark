@@ -1,6 +1,7 @@
 #define SENSOR D3
-#define LIGHT_SENSOR D5
+#define SENSOR_2 A3
 #define LED D7
+#define LED_2 D1
 
 #define GOAL_A_ADDRESS 10
 #define GOAL_B_ADDRESS 11
@@ -13,6 +14,7 @@ bool goalStateB = false;
 
 char publishHitString[3];
 int resetAll(String command);
+
 
 void setup()
 {
@@ -39,14 +41,17 @@ void loop()
   bool hit = false;
   bool publish = false;
 
-  bool lightSensorOff = digitalRead(LIGHT_SENSOR) == LOW;
-	if(lightSensorOff)
+  bool sensor2Off = analogRead(SENSOR_2) > 1000;
+	if(sensor2Off)
 	{
     // HIT
     goalStateA = true;
     hit = true;
-	}
-  if(!lightSensorOff && goalStateA) {
+    digitalWrite(LED_2, LOW);
+	} else {
+      digitalWrite(LED_2, HIGH);
+  }
+  if(!sensor2Off && goalStateA) {
     // So we got Sensor HIGH and now it went LOW, mean goal was registered
     ++goalsA;
     /*EEPROM.write(GOAL_A_ADDRESS, goalsA);*/
@@ -61,7 +66,10 @@ void loop()
     // HIT
     goalStateB = true;
     hit = true;
-	}
+    digitalWrite(LED, LOW);
+	} else {
+    digitalWrite(LED, HIGH);
+  }
   if(!sensorOff && goalStateB) {
     // So we got Sensor HIGH and now it went LOW, mean goal was registered
     ++goalsB;
@@ -70,20 +78,17 @@ void loop()
     goalStateB = false;
   }
 
-  if(hit) {
-    digitalWrite(LED, LOW);
-  } else {
-    digitalWrite(LED, HIGH);
-  }
 
   if(publish) {
     sprintf(publishHitString, "%d,%d", goalsA, goalsB);
     Particle.publish("hit", publishHitString);
   }
+  delay(100);
 }
 void pinsInit()
 {
 	pinMode(SENSOR, INPUT_PULLDOWN);
-	pinMode(LIGHT_SENSOR, INPUT_PULLDOWN);
+	pinMode(SENSOR_2, INPUT);
   pinMode(LED, OUTPUT);
+  pinMode(LED_2, OUTPUT);
 }
