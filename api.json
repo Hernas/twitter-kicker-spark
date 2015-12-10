@@ -1,0 +1,13 @@
+{
+    "eventName": "hit",
+    "url": "http://digifoosball.herokuapp.com/sparks/{{SPARK_CORE_ID}}/goal/?v={{SPARK_EVENT_VALUE}}",
+    "requestType": "POST",
+    "mydevices": true,
+    "json": {
+        "event":  "{{SPARK_EVENT_NAME}}",
+        "data": "{{SPARK_EVENT_VALUE}}",
+        "published_at": "{{SPARK_PUBLISHED_AT}}",
+        "coreid": "{{SPARK_CORE_ID}}"
+    }
+}
+
