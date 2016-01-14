@@ -36,12 +36,19 @@ int resetAll(String command)
   /*EEPROM.write(GOAL_B_ADDRESS, goalsB);*/
 }
 
+bool hit = false;
+bool publish = false;
+bool sensor2Off = false;
+bool sensorOff = false;
+
 void loop()
 {
-  bool hit = false;
-  bool publish = false;
+    hit = false;
+    publish = false;
+    sensor2Off = false;
+    sensorOff = false;
 
-  bool sensor2Off = analogRead(SENSOR_2) > 1000;
+  sensor2Off = analogRead(SENSOR_2) > 1000;
 	if(sensor2Off)
 	{
     // HIT
@@ -60,7 +67,7 @@ void loop()
   }
 
 
-  bool sensorOff = digitalRead(SENSOR) == LOW;
+  sensorOff = digitalRead(SENSOR) == LOW;
 	if(sensorOff)
 	{
     // HIT
@@ -85,6 +92,7 @@ void loop()
   }
   delay(100);
 }
+
 void pinsInit()
 {
 	pinMode(SENSOR, INPUT_PULLDOWN);
